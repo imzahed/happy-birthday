@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Heart!</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    
+    <!-- React, ReactDOM, and Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #fff9f0;
+        }
+        .font-cursive { font-family: 'Dancing Script', cursive; }
+        .font-signature { font-family: 'Sacramento', cursive; }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-110px) rotate(360deg); opacity: 0; }
+        }
+        @keyframes floatDown {
+            0% { transform: translateY(-110px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(110vh) rotate(10deg); opacity: 0; }
+        }
+        .heart-particle {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp var(--duration) linear infinite;
+            z-index: 5;
+        }
+        .text-particle {
+            position: fixed;
+            pointer-events: none;
+            animation: floatDown var(--duration) linear infinite;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbar for letter */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #fecdd3; border-radius: 10px; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+
+        // Lucide Icon Component Helper
+        const Icon = ({ name, size = 18, className = "", fill = "none" }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <i data-lucide={name} className={className} style={{ width: size, height: size, display: 'inline-block' }}></i>;
+        };
+
+        const LoadingScreen = () => {
+            const [displaySurpriseText, setDisplaySurpriseText] = useState('');
+            const [displayLoadingText, setDisplayLoadingText] = useState('');
+            const surpriseFullText = "Surprise from your Nusaiba's Abbu ❤️";
+            const loadingFullText = "Loading love for Nusaiba's Ammu...";
+            
+            useEffect(() => {
+                let sIdx = 0;
+                let lIdx = 0;
+                
+                // Typing Surprise Text first
+                const sInterval = setInterval(() => {
+                    if (sIdx <= surpriseFullText.length) {
+                        setDisplaySurpriseText(surpriseFullText.slice(0, sIdx));
+                        sIdx++;
+                    } else {
+                        clearInterval(sInterval);
+                        // Start Typing Loading Text after Surprise Text finishes
+                        const lInterval = setInterval(() => {
+                            if (lIdx <= loadingFullText.length) {
+                                setDisplayLoadingText(loadingFullText.slice(0, lIdx));
+                                lIdx++;
+                            } else {
+                                clearInterval(lInterval);
+                            }
+                        }, 50);
+                    }
+                }, 40);
+
+                return () => {
+                    clearInterval(sInterval);
+                };
+            }, []);
+
+            return (
+                <div className="flex flex-col items-center justify-center min-h-screen text-amber-900 z-20 relative px-6 text-center">
+                    <div className="space-y-6">
+                        <h2 className="text-xl md:text-2xl font-medium opacity-70 italic font-cursive animate-pulse">My Heart, always</h2>
+                        <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-amber-950 min-h-[4rem] flex items-center justify-center">
+                            {displaySurpriseText}
+                            {displaySurpriseText.length < surpriseFullText.length && <span className="animate-pulse ml-1">|</span>}
+                        </h1>
+                        <div className="mt-12 flex flex-col items-center space-y-6">
+                            <div className="relative">
+                                <div className="w-16 h-16 border-4 border-amber-900/10 border-t-amber-600 rounded-full animate-spin"></div>
+                                <div className="absolute inset-0 flex items-center justify-center"><span className="text-xl">💛</span></div>
+                            </div>
+                            <p className="text-xl md:text-2xl font-semibold tracking-wide h-8 font-mono">
+                                {displayLoadingText}
+                                {displayLoadingText.length > 0 && displayLoadingText.length < loadingFullText.length && <span className="animate-ping">|</span>}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="absolute bottom-12 left-0 right-0 flex justify-center space-x-12 opacity-40 font-bold italic uppercase tracking-[0.3em] text-amber-800 text-xs md:text-sm">
+                        <span>I LOVE YOU</span>
+                        <span className="hidden md:block">FOREVER YOU</span>
+                        <span>I LOVE YOU</span>
+                    </div>
+                </div>
+            );
+        };
+
+        const FloatingHearts = () => {
+            const messages = ["HAPPY BIRTHDAY LOVE OF MY LIFE", "YOU ARE MY EVERYTHING", "I LOVE YOU", "FOREVER YOU", "NUSAIBA's AMMU"];
+            const hearts = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
+                id: i,
+                left: `${Math.random() * 100}%`,
+                delay: `${Math.random() * 5}s`,
+                duration: `${15 + Math.random() * 15}s`,
+                size: `${15 + Math.random() * 25}px`,
+                color: i % 2 === 0 ? '#fbbf24' : '#f59e0b',
+                opacity: 0.3 + Math.random() * 0.4
+            })), []);
+
+            const textParticles = useMemo(() => Array.from({ length: 8 }).map((_, i) => ({
+                id: `text-${i}`,
+                text: messages[i % messages.length],
+                left: `${Math.random() * 90}%`,
+                delay: `${Math.random() * 15}s`,
+                duration: `${25 + Math.random() * 30}s`,
+                fontSize: `${12 + Math.random() * 8}px`,
+                opacity: 0.2 + Math.random() * 0.2
+            })), []);
+
+            return (
+                <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                    {hearts.map((heart) => (
+                        <div key={heart.id} className="heart-particle" style={{ left: heart.left, '--duration': heart.duration, animationDelay: heart.delay, fontSize: heart.size, color: heart.color, opacity: heart.opacity }}>
+                            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                        </div>
+                    ))}
+                    {textParticles.map((particle) => (
+                        <div key={particle.id} className="text-particle font-black italic tracking-widest text-amber-900/20" style={{ left: particle.left, '--duration': particle.duration, animationDelay: particle.delay, fontSize: particle.fontSize, opacity: particle.opacity }}>{particle.text}</div>
+                    ))}
+                </div>
+            );
+        };
+
+        const BirthdayPage = () => {
+            const [showLetter, setShowLetter] = useState(false);
+            const [showGift, setShowGift] = useState(false);
+            const [giftStep, setGiftStep] = useState(1);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [isCountingDown, setIsCountingDown] = useState(false);
+            const [typedMessage, setTypedMessage] = useState('');
+            const [isTyping, setIsTyping] = useState(false);
+            const [playerKey, setPlayerKey] = useState(0);
+
+            const phrases = [
+                "You are my Everything ❤",
+                "You are my favorite forever... 💝",
+                "You are my Peace ❣",
+                "You are Forever Mine 💞",
+                "I Love you more than my Life 💖"
+            ];
+
+            const videoUrl = "https://www.youtube.com/embed/O_xFSe4fZuA?autoplay=1&start=55&end=180&controls=0&modestbranding=1&rel=0&enablejsapi=1";
+
+            const typePhrase = async (phrase) => {
+                for (let i = 0; i <= phrase.length; i++) {
+                    setTypedMessage(phrase.slice(0, i));
+                    await new Promise(resolve => setTimeout(resolve, 70));
+                }
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                for (let i = phrase.length; i >= 0; i--) {
+                    setTypedMessage(phrase.slice(0, i));
+                    await new Promise(resolve => setTimeout(resolve, 30));
+                }
+            };
+
+            const startTypingSequence = async () => {
+                if (isTyping) return;
+                setIsTyping(true);
+                for (const phrase of phrases) await typePhrase(phrase);
+                setIsTyping(false);
+                setTypedMessage('');
+            };
+
+            const handleConfetti = () => {
+                if (isCountingDown) return;
+                setIsCountingDown(true);
+                setTimeout(() => {
+                    const scalar = 4.5;
+                    const duration = 5 * 1000;
+                    const end = Date.now() + duration;
+                    const emojis = ['🌸', '🌹', '🌷', '🌻', '🌺', '💖', '✨', '🎈'];
+                    const shapes = emojis.map(emoji => confetti.shapeFromText({ text: emoji, scalar }));
+                    const frame = () => {
+                        if (Date.now() > end) { setIsCountingDown(false); return; }
+                        confetti({ particleCount: 45, angle: 90, spread: 200, origin: { x: Math.random(), y: -0.2 }, shapes, ticks: 300, gravity: 1.2, drift: (Math.random() - 0.5) * 3, scalar: scalar * (0.8 + Math.random() * 0.9) });
+                        requestAnimationFrame(frame);
+                    };
+                    frame();
+                }, 5000);
+            };
+
+            const handleLoveBurst = () => {
+                const scalar = 4;
+                const heart = confetti.shapeFromText({ text: '❤️', scalar });
+                confetti({ shapes: [heart], particleCount: 150, spread: 200, origin: { y: 0.7 }, scalar, ticks: 300, gravity: 1.5 });
+            };
+
+            return (
+                <div className="relative min-h-screen flex flex-col items-center pt-4 md:pt-16 pb-20 px-4 md:px-8 z-20 animate-fade-in overflow-y-auto w-full">
+                    {typedMessage && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none px-4">
+                            <div className="bg-gradient-to-br from-rose-50/95 via-white/98 to-rose-100/95 backdrop-blur-3xl text-rose-950 px-8 md:px-16 py-12 md:py-20 rounded-[3rem] md:rounded-[5rem] text-3xl sm:text-4xl md:text-7xl font-cursive shadow-[0_60px_150px_rgba(255,100,100,0.4)] border-2 md:border-4 border-rose-200 text-center leading-tight max-w-[95%] md:max-w-6xl ring-[8px] md:ring-[16px] ring-white/40">
+                                <span className="drop-shadow-lg bg-gradient-to-r from-rose-900 via-pink-900 to-rose-900 bg-clip-text text-transparent">{typedMessage}</span>
+                                <span className="animate-pulse opacity-70 text-rose-500 ml-2">|</span>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="fixed opacity-0 pointer-events-none w-0 h-0 overflow-hidden">
+                        {isPlaying && <iframe key={playerKey} width="1" height="1" src={videoUrl} allow="autoplay"></iframe>}
+                    </div>
+
+                    <div className="text-center mb-6 md:mb-10 space-y-2">
+                        <h1 className="text-4xl md:text-8xl font-cursive text-rose-900 drop-shadow-sm leading-tight">Happy Birthday, My Heart 🎈</h1>
+                        <div className="flex items-center justify-center space-x-2 md:space-x-3">
+                            <div className="h-[1px] md:h-[2px] w-6 md:w-16 bg-rose-900/20 rounded-full"></div>
+                            <p className="text-sm md:text-2xl text-rose-800 font-bold tracking-[0.1em] md:tracking-[0.2em] uppercase">Always and forever ❤️</p>
+                            <div className="h-[1px] md:h-[2px] w-6 md:w-16 bg-rose-900/20 rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white/80 backdrop-blur-xl p-6 md:p-14 rounded-[2.5rem] md:rounded-[3rem] shadow-[0_20px_50px_rgba(150,50,50,0.1)] max-w-2xl w-full text-center space-y-8 md:space-y-10 border border-white/60">
+                        <div className="relative inline-block group">
+                            <div className="absolute -inset-4 bg-gradient-to-tr from-rose-200 via-pink-300 to-red-200 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse"></div>
+                            <div className="relative w-28 h-28 md:w-48 md:h-48 rounded-full overflow-hidden border-4 md:border-8 border-white shadow-xl mx-auto">
+                                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" />
+                            </div>
+                        </div>
+                        <div className="space-y-2 md:space-y-3">
+                            <h2 className="text-2xl md:text-4xl font-bold text-rose-950 tracking-tight">For my Heart - My Everything ❤️</h2>
+                            <p className="text-lg md:text-xl text-rose-800/60 font-medium italic">A surprise from your Nusaiba's Abbu 🎂 </p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
+                            <button onClick={() => setShowLetter(true)} className="flex-1 flex items-center justify-center space-x-2 bg-rose-700 hover:bg-rose-800 text-white font-bold py-3 md:py-4 px-4 rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-md shadow-rose-200 text-sm md:text-base"><Icon name="mail" /><span>Read My Letter</span></button>
+                            <button onClick={() => { setGiftStep(1); setShowGift(true); handleConfetti(); }} className="flex-1 flex items-center justify-center space-x-2 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 md:py-4 px-4 rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-md shadow-pink-200 text-sm md:text-base"><Icon name="gift" /><span>Open Your Gift</span></button>
+                            <button onClick={() => { setPlayerKey(k => k + 1); setIsPlaying(true); startTypingSequence(); }} className="flex-1 flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-bold py-3 md:py-4 px-4 rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-md shadow-red-200 text-sm md:text-base"><Icon name="sparkles" /><span>Suspense Here</span></button>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 md:mt-12 flex flex-col sm:flex-row justify-center gap-4 w-full max-w-md">
+                        <button onPointerDown={handleLoveBurst} className="flex-1 flex items-center justify-center space-x-2 bg-white/90 text-rose-700 px-6 py-3 md:py-4 rounded-full font-black text-base md:text-lg hover:bg-white transition-all shadow-lg border border-rose-100 active:scale-90"><Icon name="heart" /><span>Tap for Heart</span></button>
+                        <button onPointerDown={handleConfetti} disabled={isCountingDown} className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 md:py-4 rounded-full font-black text-base md:text-lg transition-all shadow-lg border active:scale-90 ${isCountingDown ? 'bg-rose-200 text-rose-700 border-rose-300 opacity-80 cursor-not-allowed' : 'bg-rose-50 text-rose-900 border-rose-200 hover:bg-rose-100'}`}><Icon name="sparkles" className={isCountingDown ? 'animate-spin' : ''} /><span>{isCountingDown ? 'Surprise in 5s...' : 'Tap for Confetti'}</span></button>
+                    </div>
+
+                    <div className="mt-12 md:mt-16 w-full max-w-2xl bg-white/60 backdrop-blur-md rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 shadow-xl border-t-8 border-rose-400 relative">
+                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-rose-900 text-white px-6 py-1.5 rounded-full font-black text-[10px] md:text-xs uppercase tracking-[0.2em] shadow-lg flex items-center space-x-2 whitespace-nowrap"><Icon name="star" /><span>The Day The World Changed</span><Icon name="star" /></div>
+                        <div className="space-y-4 md:space-y-6 text-center">
+                            <h3 className="text-3xl md:text-5xl font-black text-rose-950 leading-tight font-cursive">September 15th</h3>
+                            <div className="flex justify-center space-x-1.5 md:space-x-2">{[1, 2, 3].map(i => <Icon key={i} name="heart" size={16} className="text-rose-600 animate-pulse" />)}</div>
+                            <p className="text-rose-900/70 leading-relaxed text-base md:text-xl font-medium italic">This date is carved in my heart. It's the day my everything was born. You are the sunshine in Nusaiba's eyes and the rhythm in my heart. Every year, September 15th reminds me how incredibly blessed I am to call you mine. ❤️</p>
+                        </div>
+                    </div>
+
+                    <footer className="mt-12 md:mt-20 text-rose-950 font-medium flex items-center space-x-2 opacity-90 pb-8"><span className="text-sm md:text-lg italic">Made with infinite love by</span><span className="text-base md:text-xl font-bold tracking-widest uppercase">ZAHED</span><Icon name="heart" size={16} /></footer>
+
+                    {showLetter && (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-rose-950/20 backdrop-blur-md animate-fade-in">
+                            <div className="bg-[#fffcf7] p-8 md:p-16 max-w-2xl w-full rounded-3xl shadow-2xl relative border-l-[12px] md:border-l-[16px] border-rose-100 max-h-[85vh] overflow-y-auto custom-scroll text-center md:text-left">
+                                <button onClick={() => setShowLetter(false)} className="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5 transition-colors"><Icon name="x" size={24} className="text-rose-900/40" /></button>
+                                <div className="font-signature text-4xl md:text-5xl mb-6 text-rose-950">My Dear Heart,</div>
+                                <div className="space-y-4 md:space-y-6 text-rose-900/80 leading-relaxed font-cursive text-2xl md:text-3xl">
+                                    <p>Happy Birthday to the woman who is the center of my universe.</p>
+                                    <p>You are my life's greatest blessing. Seeing you as a mother to Nusaiba and as my life partner is the most beautiful thing I've ever witnessed. Thank you for every smile and every sacrifice.</p>
+                                    <p>I promise to cherish you today, on September 15th, and every single day that follows. You deserve the world and more.</p>
+                                </div>
+                                <div className="mt-8 font-signature text-4xl md:text-5xl text-right text-rose-950">Forever Yours Husband ❤️</div>
+                            </div>
+                        </div>
+                    )}
+
+                    {showGift && (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-rose-950/40 backdrop-blur-md animate-fade-in">
+                            <div className="bg-white p-6 md:p-12 max-w-lg w-full rounded-[2.5rem] md:rounded-[3rem] shadow-2xl text-center space-y-6 md:space-y-8 relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-2 bg-rose-400"></div>
+                                <button onClick={() => setShowGift(false)} className="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5 transition-colors"><Icon name="x" size={24} className="text-gray-300" /></button>
+                                {giftStep === 1 ? (
+                                    <div className="space-y-6 animate-fade-in">
+                                        <div className="text-5xl md:text-6xl animate-bounce">💌</div>
+                                        <h2 className="text-2xl md:text-3xl font-black text-rose-950 font-cursive">A Heartfelt Note</h2>
+                                        <div className="text-left bg-rose-50/50 p-5 md:p-6 rounded-2xl md:rounded-3xl italic text-rose-900 font-medium text-base md:text-lg leading-relaxed shadow-inner">"Every day I thank Allah for giving me you. You are more than my wife; you are my best friend and the heart of our little family with Nusaiba. My love for you grows deeper with every breath. You are the true gift in my life."</div>
+                                        <button onClick={() => { setGiftStep(2); handleLoveBurst(); }} className="w-full flex items-center justify-center space-x-2 bg-rose-900 text-white py-4 md:py-5 rounded-2xl md:rounded-3xl font-black text-lg md:text-xl hover:scale-[1.02] transition-transform shadow-lg group"><span>REVEAL YOUR GIFT</span><Icon name="chevron-right" /></button>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-6 md:space-y-8 animate-fade-in">
+                                        <div className="text-6xl md:text-8xl">🎁</div>
+                                        <div className="space-y-2 md:space-y-4">
+                                            <h2 className="text-4xl md:text-5xl font-black text-rose-950 uppercase tracking-tighter">Your Husband</h2>
+                                            <p className="text-rose-900/60 text-lg md:text-xl font-medium leading-relaxed italic">I am your gift, and you are mine. I am yours, today and through all the eternities. ❤️</p>
+                                        </div>
+                                        <button onClick={() => setShowGift(false)} className="w-full bg-rose-50 text-rose-900 py-3 rounded-2xl font-bold hover:bg-rose-100 transition-colors">Close</button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [isLoading, setIsLoading] = useState(true);
+            useEffect(() => {
+                const timer = setTimeout(() => setIsLoading(false), 5500); // Increased to accommodate longer typing
+                return () => clearTimeout(timer);
+            }, []);
+
+            return (
+                <div className="relative min-h-screen w-full overflow-hidden" style={{ backgroundColor: '#fff9f0' }}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-100 via-orange-50 to-peach-100 opacity-70"></div>
+                    <FloatingHearts />
+                    <main className="relative z-10 w-full min-h-screen">
+                        {isLoading ? <LoadingScreen /> : <BirthdayPage />}
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
