@@ -99,8 +99,8 @@
         const LoadingScreen = () => {
             const [displaySurpriseText, setDisplaySurpriseText] = useState('');
             const [displayLoadingText, setDisplayLoadingText] = useState('');
-            const surpriseFullText = "Surprise from your Nusaiba's Abbu ❤️";
-            const loadingFullText = "Loading love for Nusaiba's Ammu...";
+            const surpriseFullText = "Surprise from your Inaya's Abbu ❤️";
+            const loadingFullText = "Loading love for Inaya's Ammu...";
             
             useEffect(() => {
                 let sIdx = 0;
@@ -159,7 +159,7 @@
         };
 
         const FloatingHearts = () => {
-            const messages = ["HAPPY BIRTHDAY LOVE OF MY LIFE", "YOU ARE MY EVERYTHING", "I LOVE YOU", "FOREVER YOU", "NUSAIBA's AMMU"];
+            const messages = ["HAPPY BIRTHDAY LOVE OF MY LIFE", "YOU ARE MY EVERYTHING", "I LOVE YOU", "FOREVER YOU", "Inaya's AMMU"];
             const hearts = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
                 id: i,
                 left: `${Math.random() * 100}%`,
@@ -291,7 +291,8 @@
                         </div>
                         <div className="space-y-2 md:space-y-3">
                             <h2 className="text-2xl md:text-4xl font-bold text-rose-950 tracking-tight">For my Heart - My Everything ❤️</h2>
-                            <p className="text-lg md:text-xl text-rose-800/60 font-medium italic">A surprise from your Nusaiba's Abbu 🎂 </p>
+                            <h2 className="text-2xl md:text-4xl font-bold text-rose-950 tracking-tight">Dear Hiraboti </h2>
+                            <p className="text-lg md:text-xl text-rose-800/60 font-medium italic">A surprise from your Inaya's Abbu 🎂 </p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
                             <button onClick={() => setShowLetter(true)} className="flex-1 flex items-center justify-center space-x-2 bg-rose-700 hover:bg-rose-800 text-white font-bold py-3 md:py-4 px-4 rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-md shadow-rose-200 text-sm md:text-base"><Icon name="mail" /><span>Read My Letter</span></button>
